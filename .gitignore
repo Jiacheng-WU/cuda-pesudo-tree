@@ -1,0 +1,6 @@
+_cmake_build_*/
+build/
+
+.vscode/
+
+third_party/
