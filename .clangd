@@ -49,6 +49,7 @@ CompileFlags:
     - "--expt-extended-lambda"
     - "--expt-relaxed-constexpr"
     - "-Werror=cross-execution-space-call"
+    - "--keep"
 
 ---
 
