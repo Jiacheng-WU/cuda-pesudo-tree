@@ -8,7 +8,7 @@ If:
 
 # Apply a config conditionally to all C++ files
 If:
-  PathMatch: .*\.(c|h)pp
+  PathMatch: .*\.(cc|cpp|cxx|hh|hxx|hpp)$
 CompileFlags:
   Add:
     - -x
@@ -48,10 +48,7 @@ CompileFlags:
     - "--extended-lambda"
     - "--expt-extended-lambda"
     - "--expt-relaxed-constexpr"
-    - "-forward-unknown-to-host-compiler"
     - "-Werror=cross-execution-space-call"
-    - "-arch=native"
-    - "--options-file"
 
 ---
 
@@ -65,6 +62,11 @@ CompileFlags:
   Remove:
     # strip gcc's -fcoroutines
     - -fcoroutines
+    - "-forward-unknown-to-host-compiler"
+    - "-arch=native"
+    - "-ptx"
+    - "--options-file"
+    - "-rdc=true"
 Diagnostics:
   Suppress:
     - "variadic_device_fn"

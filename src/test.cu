@@ -1,4 +1,9 @@
-#include "test.h"
+#include "test.hpp"
+
+#include <cstdio>
+#include <cuda_runtime.h>
+
+namespace test::cuda::detail {
 
 __global__ void kernel(int* data, int* result) {
     // Kernel code here
@@ -6,7 +11,7 @@ __global__ void kernel(int* data, int* result) {
     result[idx] = data[idx] * 2; // Example operation
 }
 
-int test() {
+int cuda_test() {
     const int arraySize = 5;
     int data[arraySize] = {1, 2, 3, 4, 5};
     int result[arraySize] = {0};
@@ -31,3 +36,5 @@ int test() {
 
     return 0;
 }
+
+} // namespace test::cuda::detail
