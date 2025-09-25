@@ -1,6 +1,7 @@
-_cmake_build_*/
-build/
+_cmake_build_*/*
+build/*
 
-.vscode/
+.vscode/*
 
-third_party/
+third_party/*
+!third_party/.gitkeep
