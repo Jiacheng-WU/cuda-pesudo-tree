@@ -1,7 +1,7 @@
 {
     "cmake.configureArgs": [
         "-DCMAKE_C_COMPILER=x86_64-conda-linux-gnu-gcc",
-        "-DCMAKE_CXX_COMPILER=x86_64-conda-linux-gnu-g++",
+        "-DCMAKE_CXX_COMPILER=x86_64-conda-linux-gnu-g++"
     ],
     "clangd.arguments": [
         "--compile-commands-dir=${workspaceFolder}/_cmake_build_vscode",
@@ -18,7 +18,7 @@
         "--pretty",
         "--limit-references=0",
         "--limit-results=0",
-        "--rename-file-limit=0",
+        "--rename-file-limit=0"
     ],
     "python.defaultInterpreterPath": "${workspaceFolder}/.pixi/envs/default/bin/python",
     "terminal.integrated.env.linux": {
@@ -29,5 +29,6 @@
     ],
     "python-envs.defaultEnvManager": "ms-python.python:system",
     "python-envs.pythonProjects": [],
-    "clangd.path": "${userHome}/src/llvm-project/build/bin/clangd",
+    "clangd.path": "/opt/llvm/llvm-snapshot/bin/clangd",
+    "rust-analyzer.server.path": "${workspaceFolder}/.pixi/envs/default/bin/rust-analyzer"
 }

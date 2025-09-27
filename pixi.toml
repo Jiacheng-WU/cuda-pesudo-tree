@@ -41,13 +41,16 @@ dal = ">=2025.8.0,<2026"
 clang-tools = ">=21.1.2,<22"
 llvm-tools = ">=21.1.2,<22"
 python = ">=3.13.7,<3.14"
+rust = ">=1.90.0,<1.91"
+pytest = ">=8.4.2,<9"
 
 [pypi-options]
+index-url = "https://pypi.org/simple"
 extra-index-urls = [
   "https://download.pytorch.org/whl/nightly/cu130",
 ]
 
-
 [pypi-dependencies]
-torch = { version = "==2.10.*", index = "https://download.pytorch.org/whl/nightly/cu130" }
-torchvision = { version = "==0.24.*", index = "https://download.pytorch.org/whl/nightly/cu130" }
+triton = {version = "*", index = "https://pypi.org/simple"}
+torch = { version = "*", index = "https://download.pytorch.org/whl/nightly/cu130" }
+torchvision = { version = "*", index = "https://download.pytorch.org/whl/nightly/cu130" }
