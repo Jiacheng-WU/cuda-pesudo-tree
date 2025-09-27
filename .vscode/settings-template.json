@@ -1,0 +1,33 @@
+{
+    "cmake.configureArgs": [
+        "-DCMAKE_C_COMPILER=x86_64-conda-linux-gnu-gcc",
+        "-DCMAKE_CXX_COMPILER=x86_64-conda-linux-gnu-g++",
+    ],
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/_cmake_build_vscode",
+        "--all-scopes-completion",
+        "--background-index",
+        "--completion-style=detailed",
+        "--experimental-modules-support",
+        "--header-insertion=iwyu",
+        "--header-insertion-decorators",
+        "--import-insertions",
+        "--enable-config",
+        "--pch-storage=disk",
+        "--log=verbose",
+        "--pretty",
+        "--limit-references=0",
+        "--limit-results=0",
+        "--rename-file-limit=0",
+    ],
+    "python.defaultInterpreterPath": "${workspaceFolder}/.pixi/envs/default/bin/python",
+    "terminal.integrated.env.linux": {
+        "PYTHONPATH": "${workspaceFolder}/_cmake_build_vscode/"
+    },
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/_cmake_build_vscode/"
+    ],
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": [],
+    "clangd.path": "${userHome}/src/llvm-project/build/bin/clangd",
+}

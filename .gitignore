@@ -1,7 +1,12 @@
+# Build directories
 _cmake_build_*/*
 build/*
-
+# VSCode settings
 .vscode/*
-
+!.vscode/settings-template.json
+# CPM third_party modules
 third_party/*
 !third_party/.gitkeep
+# pixi environments
+.pixi/*
+!.pixi/config.toml

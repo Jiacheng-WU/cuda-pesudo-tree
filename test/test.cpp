@@ -1,6 +1,3 @@
-#include <boost/ut.hpp>
+#include "gtest/gtest.h"
 
-int main() {
-    using namespace boost::ut;
-    "sample test"_test = [] { expect(1_i == 1); };
-}
+TEST(SampleTest, AssertionTrue) { EXPECT_TRUE(true); }

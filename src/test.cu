@@ -7,6 +7,10 @@
 #include <thrust/sequence.h>
 #include <thrust/transform.h>
 
+#include <cuda/std/span>
+
+#include <cutlass/cutlass.h>
+
 namespace test::cuda::detail {
 
 __global__ void kernel(int* data, int* result) {

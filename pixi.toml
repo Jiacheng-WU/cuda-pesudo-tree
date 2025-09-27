@@ -1,0 +1,53 @@
+[workspace]
+authors = ["Jiacheng Wu <jcwu22@cs.washington.edu>"]
+channels = ["conda-forge"]
+name = "pesudo-tree"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+gcc = ">=15.1.0,<15.2"
+gxx = ">=15.1.0,<15.2"
+libboost = ">=1.89.0,<2"
+libboost-headers = ">=1.89.0,<2"
+libboost-devel = ">=1.89.0,<2"
+libboost-python = ">=1.89.0,<2"
+libboost-mpi = ">=1.89.0,<2"
+libboost-python-devel = ">=1.89.0,<2"
+llvm = ">=21.1.2,<22"
+clang = ">=21.1.2,<22"
+cutlass = ">=4.2.1,<5"
+tbb = ">=2022.2.0,<2023"
+pybind11 = ">=3.0.1,<4"
+nlohmann_json = ">=3.12.0,<4"
+cuda = ">=13.0.1,<14"
+cuda-python = ">=13.0.1,<14"
+libabseil = ">=20250814.1,<20250815"
+cmake = ">=4.1.1,<5"
+gtest = ">=1.17.0,<2"
+benchmark = ">=1.9.4,<2"
+fmt = ">=11.2.0,<12"
+cuda-core = ">=0.3.2,<0.4"
+cuda-version = ">=13.0,<14"
+cupy = ">=13.6.0,<14"
+numba-cuda = ">=0.20.0,<0.21"
+cudnn = ">=9.13.0.50,<10"
+mkl = ">=2020.4,<2021"
+oneccl-devel = ">=2021.16.0,<2022"
+onednn = ">=3.9.1,<4"
+dal = ">=2025.8.0,<2026"
+clang-tools = ">=21.1.2,<22"
+llvm-tools = ">=21.1.2,<22"
+python = ">=3.13.7,<3.14"
+
+[pypi-options]
+extra-index-urls = [
+  "https://download.pytorch.org/whl/nightly/cu130",
+]
+
+
+[pypi-dependencies]
+torch = { version = "==2.10.*", index = "https://download.pytorch.org/whl/nightly/cu130" }
+torchvision = { version = "==0.24.*", index = "https://download.pytorch.org/whl/nightly/cu130" }
