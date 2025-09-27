@@ -22,6 +22,7 @@ if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
 endif()
 
 find_package(CUDAToolkit REQUIRED)
+find_package(CCCL CONFIG REQUIRED)
 find_package(Threads REQUIRED)
 find_package(Boost CONFIG)
 find_package(GTest CONFIG REQUIRED)
@@ -55,6 +56,15 @@ CPMAddPackage(
     OPTIONS "BUILD_TESTING OFF"
 )
 
+# should include CCCL before stdexec
+# otherwise stdexec may fail to use CUDA
+CPMAddPackage(
+    URI "gh:NVIDIA/stdexec#main"
+    OPTIONS "STDEXEC_BUILD_TESTS OFF"
+            "STDEXEC_BUILD_EXAMPLES OFF"
+            "STDEXEC_BUILD_DOCS OFF"
+            "STDEXEC_ENABLE_CUDA ON"
+)
 
 # create global include directory
 include_directories(include)
@@ -88,6 +98,7 @@ target_link_libraries(mycpplib
     PUBLIC msft_proxy4::proxy
     PUBLIC Boost::boost
     PUBLIC Threads::Threads
+    PUBLIC STDEXEC::stdexec
 )
 
 add_executable(main main.cpp)

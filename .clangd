@@ -68,6 +68,7 @@ CompileFlags:
     - "-ptx"
     - "--options-file"
     - "-rdc=true"
+    - "-fconcepts-diagnostics-depth=10"
 Diagnostics:
   Suppress:
     - "variadic_device_fn"
