@@ -1,20 +1,12 @@
 #include "pt.hpp"
-
-#include <format>
-#include <iostream>
-#include <vector>
+#include "torch/torch.h"
 
 namespace pt {
 
-int cpp_pt_naive_wrapper() {
-    std::vector<int> data = {1, 2, 3, 4, 5};
-    std::vector<int> result(data.size(), 0);
-    int err = cuda::detail::cuda_pt_naive(data, result);
-    for (const auto& val : result) {
-        std::cout << std::format("{} ", val);
-    }
-    std::cout << std::endl;
-    return err;
+int64_t cpp_pt_torch(const int N, const unsigned long long seed) {
+    torch::Tensor tensor = torch::rand({2, 3});
+    std::cout << tensor << std::endl;
+    return 0;
 }
 
 } // namespace pt

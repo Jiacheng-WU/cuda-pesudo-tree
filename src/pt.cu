@@ -1,12 +1,17 @@
 #include "pt.hpp"
 
+#include <cstdint>
 #include <cuda_runtime.h>
 
 #include <cooperative_groups.h>
 
+#include <cuda_runtime_api.h>
+#include <driver_types.h>
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
+#include <thrust/random.h>
 #include <thrust/sequence.h>
+#include <thrust/tabulate.h>
 #include <thrust/transform.h>
 
 #include <cub/cub.cuh>
@@ -17,13 +22,13 @@
 
 namespace cg = cooperative_groups;
 
-namespace pt::cuda::detail {
+namespace pt::cuda {
 
 // \sum A_ij * B_ik * C_il
 // where A, B, C are (N, N) matrices
 // and the output is stored in
 
-constinit const int NUM_THREADS_IN_BLOCK = 256;
+constinit const int NUM_THREADS_IN_BLOCK = 1024;
 
 __device__ int64_t sum_over_2nd_dim(const int* Mat, const int N,
                                     const int part_size, int i) {
@@ -55,7 +60,7 @@ __global__ void naive_star_kernel(const int* A, const int* B, const int* C,
     int block_index_i = blockIdx.x;
     int thread_index_i = threadIdx.x;
     int block_size = blockDim.x;
-    int grid_size = gridDim.x;
+    [[maybe_unused]] int grid_size = gridDim.x;
     assert(grid_size == block_size);
     assert(block_size == NUM_THREADS_IN_BLOCK);
     assert(N % block_size == 0);
@@ -91,25 +96,63 @@ __global__ void naive_star_kernel(const int* A, const int* B, const int* C,
     }
 }
 
-int cuda_pt_naive(std::span<int> data, std::span<int> result) {
-    const int arraySize = static_cast<int>(result.size());
+// A functor to generate random numbers.
+// The operator() is called for each element index 'i'.
+struct RandomGenerator {
+    unsigned long long seed;
 
-    int *d_data, *d_result;
-    cudaMalloc((void**)&d_data, arraySize * sizeof(int));
-    cudaMalloc((void**)&d_result, arraySize * sizeof(int));
+    // Constructor captures the seed
+    RandomGenerator(unsigned long long s) : seed(s) {}
 
-    cudaMemcpy(d_data, data.data(), arraySize * sizeof(int),
-               cudaMemcpyHostToDevice);
+    // The __host__ __device__ specifiers allow this functor
+    // to be created on the host and run on the device.
+    __host__ __device__ int operator()(unsigned int i) {
+        // Create a new engine for each thread, but seed it uniquely
+        // based on the global seed and the thread's index.
+        thrust::default_random_engine rng(seed + i);
 
-    // kernel<<<1, arraySize>>>(d_data, d_result);
+        // Define the distribution
+        thrust::uniform_int_distribution<int> dist(0, 10);
 
-    cudaMemcpy(result.data(), d_result, arraySize * sizeof(int),
-               cudaMemcpyDeviceToHost);
+        // Discard the first value to increase randomness, as the first
+        // value from a simple LCG can sometimes be weak.
+        rng.discard(1);
 
-    cudaFree(d_data);
-    cudaFree(d_result);
+        // Return a random number from the distribution
+        return dist(rng);
+    }
+};
 
-    return 0;
+int64_t cuda_pt_naive(const int N, const unsigned long long seed) {
+    assert(N % NUM_THREADS_IN_BLOCK == 0);
+    const int num_elements = N * N;
+
+    // 1. Create a Thrust device_vector.
+    thrust::device_vector<int> A_matrix(num_elements);
+    thrust::device_vector<int> B_matrix(num_elements);
+    thrust::device_vector<int> C_matrix(num_elements);
+
+    // 2. Use thrust::tabulate to fill the vector.
+    // It calls an instance of our RandomGenerator for each index from 0 to
+    // num_elements-1.
+    thrust::tabulate(A_matrix.begin(), A_matrix.end(), RandomGenerator(seed));
+    thrust::tabulate(B_matrix.begin(), B_matrix.end(), RandomGenerator(seed));
+    thrust::tabulate(C_matrix.begin(), C_matrix.end(), RandomGenerator(seed));
+
+    int* raw_ptr_A = thrust::raw_pointer_cast(A_matrix.data());
+    int* raw_ptr_B = thrust::raw_pointer_cast(B_matrix.data());
+    int* raw_ptr_C = thrust::raw_pointer_cast(C_matrix.data());
+
+    thrust::device_vector<uint64_t> d_output(1, 0);
+    uint64_t* raw_ptr_output = thrust::raw_pointer_cast(d_output.data());
+    cudaDeviceSynchronize();
+
+    naive_star_kernel<<<NUM_THREADS_IN_BLOCK, NUM_THREADS_IN_BLOCK>>>(
+        raw_ptr_A, raw_ptr_B, raw_ptr_C, N, raw_ptr_output);
+    cudaDeviceSynchronize();
+    thrust::host_vector<uint64_t> h_output = d_output;
+
+    return h_output[0];
 }
 
 int thrust_test() {
@@ -126,4 +169,4 @@ int thrust_test() {
     return 0;
 }
 
-} // namespace pt::cuda::detail
+} // namespace pt::cuda

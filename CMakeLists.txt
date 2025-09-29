@@ -21,6 +21,10 @@ if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
     set(CMAKE_CUDA_ARCHITECTURES native)
 endif()
 
+# Append flag for Debug/RelWithDebInfo builds
+set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} --device-debug")
+set(CMAKE_CUDA_FLAGS_RELWITHDEBINFO "${CMAKE_CUDA_FLAGS_RELWITHDEBINFO} --generate-line-info")
+
 find_package(CUDAToolkit REQUIRED)
 find_package(CCCL CONFIG REQUIRED)
 find_package(Threads REQUIRED)
@@ -32,8 +36,35 @@ find_package(benchmark CONFIG REQUIRED)
 find_package(absl REQUIRED COMPONENTS log)
 find_package(nlohmann_json CONFIG REQUIRED)
 
+
+find_package(Python COMPONENTS Interpreter Development)
 set(PYBIND11_FINDPYTHON NEW)
 find_package(pybind11 CONFIG REQUIRED)
+
+# Define variables for clarity
+
+set(THIRD_PARTY_DIR "${CMAKE_SOURCE_DIR}/third_party/")
+set(TORCH_DIR "${THIRD_PARTY_DIR}/libtorch")
+
+# Only proceed if the extraction directory doesn't already exist
+if(NOT EXISTS "${TORCH_DIR}")
+    set(TORCH_URL "https://download.pytorch.org/libtorch/nightly/cu130/libtorch-shared-with-deps-latest.zip")
+    set(TORCH_FILE "${CMAKE_BINARY_DIR}/libtorch.zip")
+    message(STATUS "Downloading and extracting dependency to ${TORCH_DIR}")
+    # 1. Download the ZIP file to a temporary location in the build directory
+    file(DOWNLOAD ${TORCH_URL} ${TORCH_FILE} SHOW_PROGRESS)
+    # 2. Decompress the ZIP directly into your desired source folder
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} -E tar xzf ${TORCH_FILE}
+        WORKING_DIRECTORY ${THIRD_PARTY_DIR}
+        COMMAND_ERROR_IS_FATAL ANY
+    )
+else()
+    message(STATUS "Dependency already exists at ${TORCH_DIR}")
+endif()
+set(CUDA_TOOLKIT_ROOT_DIR ${CUDAToolkit_LIBRARY_ROOT})
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${TORCH_DIR}/libtorch/share/cmake/Torch)
+find_package(Torch CONFIG)
 
 # Follow CUTLASS cmake INTERFACE pattern
 find_path(CUTLASS_INCLUDE_DIRS "cutlass/cutlass.h"
@@ -47,7 +78,7 @@ target_include_directories(CUTLASS INTERFACE
 )
 
 # add dependencies
-set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/third_party/ CACHE PATH "CPM source cache")
+set(CPM_SOURCE_CACHE ${THIRD_PARTY_DIR} CACHE PATH "CPM source cache")
 include(cmake/CPM.cmake)
 
 CPMAddPackage("gh:fmtlib/fmt#12.0.0")
@@ -99,6 +130,7 @@ target_link_libraries(mycpplib
     PUBLIC Boost::boost
     PUBLIC Threads::Threads
     PUBLIC STDEXEC::stdexec
+    PUBLIC ${TORCH_LIBRARIES}
 )
 
 add_executable(main main.cpp)

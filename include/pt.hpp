@@ -1,8 +1,9 @@
-#include <span>
+#pragma once
+#include <cstdint>
 
 namespace pt {
-namespace cuda::detail {
-int cuda_pt_naive(std::span<int> data, std::span<int> result);
-} // namespace cuda::detail
-int cpp_pt_naive_wrapper();
+namespace cuda {
+int64_t cuda_pt_naive(const int N, const unsigned long long seed = 42ULL);
+} // namespace cuda
+int64_t cpp_pt_torch(const int N, const unsigned long long seed = 42ULL);
 } // namespace pt

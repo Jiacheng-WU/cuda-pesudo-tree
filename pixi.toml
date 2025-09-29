@@ -46,10 +46,11 @@ llvm-tools = ">=21.1.2,<22"
 python = ">=3.13.7,<3.14"
 rust = ">=1.90.0,<1.91"
 pytest = ">=8.4.2,<9"
+nvtx = ">=0.2.13,<0.3"
 
 [pypi-dependencies]
 # triton = { version = ">=3.4.0, <4", index = "https://pypi.org/simple" }
 onnx = { version = ">=1.19.0, <2", index = "https://pypi.org/simple" }
 pytorch-triton = { version = "*", index = "https://download.pytorch.org/whl/nightly/cu130" }
-torch = { version = "*", index = "https://download.pytorch.org/whl/nightly/cu130" }
+torch = { version = ">=2.9.0", index = "https://download.pytorch.org/whl/nightly/cu130" }
 torchvision = { version = "*", index = "https://download.pytorch.org/whl/nightly/cu130" }

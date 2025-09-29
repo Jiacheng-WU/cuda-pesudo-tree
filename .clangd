@@ -50,6 +50,7 @@ CompileFlags:
     - "--expt-relaxed-constexpr"
     - "-Werror=cross-execution-space-call"
     - "--keep"
+    - "--generate-line-info"
 
 ---
 
@@ -69,7 +70,11 @@ CompileFlags:
     - "--options-file"
     - "-rdc=true"
     - "-fconcepts-diagnostics-depth=10"
+    - "--extended-lambda"
+    - "--keep"
+    - "--generate-line-info"
 Diagnostics:
+  UnusedIncludes: None
   Suppress:
     - "variadic_device_fn"
     - "attributes_not_allowed"

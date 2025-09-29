@@ -210,6 +210,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/numba-0.62.0-py313hd8e3f9f_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/numba-cuda-0.20.0-pyhcf101f3_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/numpy-2.3.3-py313hf6604e3_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/nvtx-0.2.13-py313h07c4f96_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/ocl-icd-2.3.3-hb9d3cd8_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/oneccl-devel-2021.16.0-h7a4b287_304.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/onednn-3.9.1-omp_h83de36e_0.conda
@@ -277,18 +278,18 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/a5/87/e3c9ee227b750e5b61572e7509f586cc8d494a4f7874b5163e734ed852c2/nvidia_cusolver-12.0.3.29-py3-none-manylinux_2_27_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/ba/e8/b3f7a87cc719dca926c7baee92f2544de8909573a4126c85a9f1625431e8/nvidia_cusparse-12.6.2.49-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/fd/53/43b0d71f4e702fa9733f8b4571fdca50a8813f1e450b656c239beff12315/nvidia_cusparselt_cu13-0.8.0-py3-none-manylinux2014_x86_64.whl
-      - pypi: https://files.pythonhosted.org/packages/f1/3a/dabb10684e60edfaf1a1c9984d12a668bc1091582099d4e03ac5b9983b51/nvidia_nccl_cu13-2.27.7-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/6e/38/bb5e182b08c8b53987224b7e67c1150a60219a99b8cf40ec8cb1ab6655d1/nvidia_nccl_cu13-2.28.3-py3-none-manylinux_2_18_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/95/39/726edebeb76f3efc25c79f885429fa1227c9d200e20ea219bf724b382e19/nvidia_nvjitlink-13.0.39-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/6f/e9/8530afb8ed38d16bbc89cec80a4dd6a52dbf59bc93e546c3658cfa8b1f9b/nvidia_nvshmem_cu13-3.3.24-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/38/37/0d103c84e7884382a79a569b720965141f83dd1c5df9e3e00cbc02d7099c/nvidia_nvtx-13.0.39-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/83/fa/b086d17bab3900754c7ffbabfb244f8e5e5da54a34dda2a27022aa2b373b/onnx-1.19.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/d5/1c/a2a29649c0b1983d3ef57ee87a66487fdeb45132df66ab30dd37f7dbe162/pillow-11.3.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/5c/f6/88d77011b605ef979aace37b7703e4eefad066f7e84d935e5a696515c2dd/protobuf-6.32.1-cp39-abi3-manylinux2014_x86_64.whl
-      - pypi: https://download.pytorch.org/whl/nightly/pytorch_triton-3.5.0%2Bgitfccfc522-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+      - pypi: https://download.pytorch.org/whl/nightly/pytorch_triton-3.5.0%2Bgitbbb06c03-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/a3/dc/17031897dae0efacfea57dfd3a82fdd2a2aeb58e0ff71b77b87e44edc772/setuptools-80.9.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/a2/09/77d55d46fd61b4a135c444fc97158ef34a095e5681d0a6c10b75bf356191/sympy-1.14.0-py3-none-any.whl
-      - pypi: https://download.pytorch.org/whl/nightly/cu130/torch-2.10.0.dev20250910%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
-      - pypi: https://download.pytorch.org/whl/nightly/cu130/torchvision-0.24.0.dev20250911%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
+      - pypi: https://download.pytorch.org/whl/nightly/cu130/torch-2.10.0.dev20250928%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
+      - pypi: https://download.pytorch.org/whl/nightly/cu130/torchvision-0.25.0.dev20250929%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
 packages:
 - conda: https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-4_kmp_llvm.conda
   build_number: 4
@@ -3247,10 +3248,10 @@ packages:
   name: nvidia-cusparselt-cu13
   version: 0.8.0
   sha256: 25e30a8a7323935d4ad0340b95a0b69926eee755767e8e0b1cf8dd85b197d3fd
-- pypi: https://files.pythonhosted.org/packages/f1/3a/dabb10684e60edfaf1a1c9984d12a668bc1091582099d4e03ac5b9983b51/nvidia_nccl_cu13-2.27.7-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
+- pypi: https://files.pythonhosted.org/packages/6e/38/bb5e182b08c8b53987224b7e67c1150a60219a99b8cf40ec8cb1ab6655d1/nvidia_nccl_cu13-2.28.3-py3-none-manylinux_2_18_x86_64.whl
   name: nvidia-nccl-cu13
-  version: 2.27.7
-  sha256: b28a524abd8389b76a4a3f133c76a7aaa7005e47fcaa9d9603b90103927a3f93
+  version: 2.28.3
+  sha256: 9f093dd7b97ddc90ef654676173a0c301d2434c431f17aa324e9c00039afb4c7
   requires_python: '>=3'
 - pypi: https://files.pythonhosted.org/packages/95/39/726edebeb76f3efc25c79f885429fa1227c9d200e20ea219bf724b382e19/nvidia_nvjitlink-13.0.39-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl
   name: nvidia-nvjitlink
@@ -3267,6 +3268,20 @@ packages:
   version: 13.0.39
   sha256: cc113127785c96db8a0fe715df92db9788777b4b3d1bd713d42f75969201b5ce
   requires_python: '>=3'
+- conda: https://conda.anaconda.org/conda-forge/linux-64/nvtx-0.2.13-py313h07c4f96_1.conda
+  sha256: a297ed51fb725e5225610857429f9c236d4115e6dabb2a7d14f33f92bcbf2935
+  md5: 693f5ca8ca33253d7ea8045ab4d55db1
+  depends:
+  - __glibc >=2.17,<3.0.a0
+  - libgcc >=14
+  - python >=3.13,<3.14.0a0
+  - python_abi 3.13.* *_cp313
+  license: Apache-2.0 WITH LLVM-exception
+  license_family: APACHE
+  purls:
+  - pkg:pypi/nvtx?source=hash-mapping
+  size: 99476
+  timestamp: 1758400070068
 - conda: https://conda.anaconda.org/conda-forge/linux-64/ocl-icd-2.3.3-hb9d3cd8_0.conda
   sha256: 2254dae821b286fb57c61895f2b40e3571a070910fdab79a948ff703e1ea807b
   md5: 56f8947aa9d5cf37b0b3d43b83f34192
@@ -3525,9 +3540,9 @@ packages:
   purls: []
   size: 7002
   timestamp: 1752805902938
-- pypi: https://download.pytorch.org/whl/nightly/pytorch_triton-3.5.0%2Bgitfccfc522-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+- pypi: https://download.pytorch.org/whl/nightly/pytorch_triton-3.5.0%2Bgitbbb06c03-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
   name: pytorch-triton
-  version: 3.5.0+gitfccfc522
+  version: 3.5.0+gitbbb06c03
   requires_dist:
   - importlib-metadata ; python_full_version < '3.10'
   - cmake>=3.20,<4.0 ; extra == 'build'
@@ -3723,9 +3738,9 @@ packages:
   - pkg:pypi/tomli?source=compressed-mapping
   size: 21238
   timestamp: 1753796677376
-- pypi: https://download.pytorch.org/whl/nightly/cu130/torch-2.10.0.dev20250910%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
+- pypi: https://download.pytorch.org/whl/nightly/cu130/torch-2.10.0.dev20250928%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
   name: torch
-  version: 2.10.0.dev20250910+cu130
+  version: 2.10.0.dev20250928+cu130
   requires_dist:
   - filelock
   - typing-extensions>=4.10.0
@@ -3734,32 +3749,32 @@ packages:
   - networkx>=2.5.1
   - jinja2
   - fsspec>=0.8.5
-  - nvidia-cuda-nvrtc==13.0.48 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-cuda-runtime==13.0.48 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-cuda-cupti==13.0.48 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-cudnn-cu13==9.13.0.50 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-cublas==13.0.0.19 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-cufft==12.0.0.15 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-curand==10.4.0.35 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-cusolver==12.0.3.29 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-cusparse==12.6.2.49 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-cusparselt-cu13==0.8.0 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-nccl-cu13==2.27.7 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-nvshmem-cu13==3.3.24 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-nvtx==13.0.39 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-nvjitlink==13.0.39 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - nvidia-cufile==1.15.0.42 ; platform_machine == 'x86_64' and sys_platform == 'linux'
-  - pytorch-triton==3.5.0+gitfccfc522 ; sys_platform == 'linux'
+  - nvidia-cuda-nvrtc==13.0.48 ; sys_platform == 'linux'
+  - nvidia-cuda-runtime==13.0.48 ; sys_platform == 'linux'
+  - nvidia-cuda-cupti==13.0.48 ; sys_platform == 'linux'
+  - nvidia-cudnn-cu13==9.13.0.50 ; sys_platform == 'linux'
+  - nvidia-cublas==13.0.0.19 ; sys_platform == 'linux'
+  - nvidia-cufft==12.0.0.15 ; sys_platform == 'linux'
+  - nvidia-curand==10.4.0.35 ; sys_platform == 'linux'
+  - nvidia-cusolver==12.0.3.29 ; sys_platform == 'linux'
+  - nvidia-cusparse==12.6.2.49 ; sys_platform == 'linux'
+  - nvidia-cusparselt-cu13==0.8.0 ; sys_platform == 'linux'
+  - nvidia-nccl-cu13==2.28.3 ; sys_platform == 'linux'
+  - nvidia-nvshmem-cu13==3.3.24 ; sys_platform == 'linux'
+  - nvidia-nvtx==13.0.39 ; sys_platform == 'linux'
+  - nvidia-nvjitlink==13.0.39 ; sys_platform == 'linux'
+  - nvidia-cufile==1.15.0.42 ; sys_platform == 'linux'
+  - pytorch-triton==3.5.0+gitbbb06c03 ; sys_platform == 'linux'
   - optree>=0.13.0 ; extra == 'optree'
   - opt-einsum>=3.3 ; extra == 'opt-einsum'
   - pyyaml ; extra == 'pyyaml'
-  requires_python: '>=3.9'
-- pypi: https://download.pytorch.org/whl/nightly/cu130/torchvision-0.24.0.dev20250911%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
+  requires_python: '>=3.10'
+- pypi: https://download.pytorch.org/whl/nightly/cu130/torchvision-0.25.0.dev20250929%2Bcu130-cp313-cp313-manylinux_2_28_x86_64.whl
   name: torchvision
-  version: 0.24.0.dev20250911+cu130
+  version: 0.25.0.dev20250929+cu130
   requires_dist:
   - numpy
-  - torch==2.10.0.dev20250910
+  - torch==2.10.0.dev20250928
   - pillow>=5.3.0,!=8.3.*
   - gdown>=4.7.3 ; extra == 'gdown'
   - scipy ; extra == 'scipy'
