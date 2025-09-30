@@ -100,6 +100,15 @@ CPMAddPackage(
 # create global include directory
 include_directories(include)
 
+add_library(core_utils INTERFACE)
+
+target_link_libraries(core_utils
+  INTERFACE
+    fmt::fmt
+    absl::log
+    Boost::boost
+)
+
 # create blob for all cu files
 file(GLOB_RECURSE CUDA_SOURCE "src/*.cu")
 add_library(mycudalib STATIC ${CUDA_SOURCE})
@@ -116,27 +125,28 @@ target_compile_options(mycudalib
 target_link_libraries(mycudalib
     PUBLIC CUDA::cudart
     PUBLIC CUDA::cublas
-    PRIVATE nvidia::cutlass::cutlass
+    PUBLIC nvidia::cutlass::cutlass
+    PUBLIC ${TORCH_LIBRARIES}
+    PRIVATE core_utils
 )
 
 # create blob for all cpp files
 file (GLOB_RECURSE CPP_SOURCE "src/*.cpp")
 add_library(mycpplib STATIC ${CPP_SOURCE})
 target_link_libraries(mycpplib
-    PUBLIC fmt::fmt
     PUBLIC nlohmann_json::nlohmann_json
-    PUBLIC absl::log
     PUBLIC msft_proxy4::proxy
-    PUBLIC Boost::boost
     PUBLIC Threads::Threads
     PUBLIC STDEXEC::stdexec
     PUBLIC ${TORCH_LIBRARIES}
+    PRIVATE core_utils
 )
 
 add_executable(main main.cpp)
 target_link_libraries(main
     PRIVATE mycudalib
-    PRIVATE mycpplib)
+    PRIVATE mycpplib
+    PRIVATE core_utils)
 
 # For Python bindings
 pybind11_add_module(pesudo_tree python/bind/main.cpp)

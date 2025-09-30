@@ -2,8 +2,14 @@
 #include <cstdint>
 
 namespace pt {
-namespace cuda {
-int64_t cuda_pt_naive(const int N, const unsigned long long seed = 42ULL);
-} // namespace cuda
-int64_t cpp_pt_torch(const int N, const unsigned long long seed = 42ULL);
+namespace gpu {
+int64_t pt_naive(const int32_t N, const int64_t seed = 42ULL);
+int64_t pt_torch(const int32_t N, const int64_t seed = 42ULL);
+} // namespace gpu
+
+namespace cpu {
+int64_t pt_naive(const int32_t N, const int64_t seed = 42ULL);
+int64_t pt_torch(const int32_t N, const int64_t seed = 42ULL);
+} // namespace cpu
+
 } // namespace pt

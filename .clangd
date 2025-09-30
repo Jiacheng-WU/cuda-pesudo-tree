@@ -32,25 +32,6 @@ CompileFlags:
   Remove:
     - -G
     - -stdpar
-    # strip CUDA fatbin args
-    - "-Xfatbin*"
-    - "-Xcompiler*"
-    - "-Xcudafe*"
-    - "-rdc=*"
-    - "-gpu=*"
-    - "--diag_suppress*"
-    # strip CUDA arch flags
-    - "-gencode*"
-    - "--generate-code*"
-    # strip CUDA flags unknown to clang
-    - "-ccbin*"
-    - "--compiler-options*"
-    - "--extended-lambda"
-    - "--expt-extended-lambda"
-    - "--expt-relaxed-constexpr"
-    - "-Werror=cross-execution-space-call"
-    - "--keep"
-    - "--generate-line-info"
 
 ---
 
@@ -65,12 +46,28 @@ CompileFlags:
     # strip gcc's -fcoroutines
     - -fcoroutines
     - "-forward-unknown-to-host-compiler"
+    # strip CUDA fatbin args
+    - "-Xfatbin*"
+    - "-Xcompiler*"
+    - "-Xcudafe*"
+    - "-rdc=*"
+    - "-gpu=*"
+    - "--diag_suppress*"
     - "-arch=native"
     - "-ptx"
     - "--options-file"
     - "-rdc=true"
     - "-fconcepts-diagnostics-depth=10"
+    # strip CUDA arch flags
+    - "-gencode*"
+    - "--generate-code*"
+    # strip CUDA flags unknown to clang
+    - "-ccbin*"
+    - "--compiler-options*"
     - "--extended-lambda"
+    - "--expt-extended-lambda"
+    - "--expt-relaxed-constexpr"
+    - "-Werror=cross-execution-space-call"
     - "--keep"
     - "--generate-line-info"
 Diagnostics:
