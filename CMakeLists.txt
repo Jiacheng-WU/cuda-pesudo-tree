@@ -64,6 +64,7 @@ else()
 endif()
 set(CUDA_TOOLKIT_ROOT_DIR ${CUDAToolkit_LIBRARY_ROOT})
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${TORCH_DIR}/libtorch/share/cmake/Torch)
+
 find_package(Torch CONFIG)
 
 # Follow CUTLASS cmake INTERFACE pattern
@@ -121,6 +122,8 @@ set_target_properties(mycudalib PROPERTIES
 # Thus use --keep to keep the intermediate files which include the ptx files.
 target_compile_options(mycudalib
     PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--keep>
+    # Try to use C++23 standard, but nvcc does not support it
+    # PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-std=c++23>
     PRIVATE --extended-lambda)
 target_link_libraries(mycudalib
     PUBLIC CUDA::cudart

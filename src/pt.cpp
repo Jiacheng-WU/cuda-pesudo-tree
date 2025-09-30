@@ -13,6 +13,9 @@
 
 namespace pt::cpu {
 
+template <std::size_t NumMatrices>
+using DataGenerator = CpuDataGenerator<NumMatrices>;
+
 int64_t sum_over_2nd_dim(const thrust::host_vector<int64_t>& matrix,
                          const int32_t N, const int32_t i) {
     int64_t total_sum = 0;
@@ -23,16 +26,10 @@ int64_t sum_over_2nd_dim(const thrust::host_vector<int64_t>& matrix,
 }
 
 int64_t pt_naive(const int32_t N, const int64_t seed) {
-    const int64_t num_elements = N * N;
-
-    // 1. Create a Thrust device_vector.
-    thrust::host_vector<int64_t> A_matrix(num_elements);
-    thrust::host_vector<int64_t> B_matrix(num_elements);
-    thrust::host_vector<int64_t> C_matrix(num_elements);
-
-    thrust::tabulate(A_matrix.begin(), A_matrix.end(), RandomGenerator(seed));
-    thrust::tabulate(B_matrix.begin(), B_matrix.end(), RandomGenerator(seed));
-    thrust::tabulate(C_matrix.begin(), C_matrix.end(), RandomGenerator(seed));
+    DataGenerator<3> data_gen(N, seed);
+    auto& A_matrix = data_gen.get_matrix<0>();
+    auto& B_matrix = data_gen.get_matrix<1>();
+    auto& C_matrix = data_gen.get_matrix<2>();
 
     std::atomic<int64_t> total_sum = 0;
     auto compute_func = [&]() -> void {
@@ -53,32 +50,18 @@ int64_t pt_naive(const int32_t N, const int64_t seed) {
 }
 
 int64_t pt_torch(const int32_t N, const int64_t seed) {
+    DataGenerator<3> data_gen(N, seed);
+    int64_t* raw_ptr_A = data_gen.get_raw_ptr<0>();
+    int64_t* raw_ptr_B = data_gen.get_raw_ptr<1>();
+    int64_t* raw_ptr_C = data_gen.get_raw_ptr<2>();
+
     torch::NoGradGuard no_grad;
-    const int64_t num_elements = N * N;
-
-    // 1. Create a Thrust device_vector.
-    thrust::host_vector<int64_t> A_matrix(num_elements);
-    thrust::host_vector<int64_t> B_matrix(num_elements);
-    thrust::host_vector<int64_t> C_matrix(num_elements);
-
-    // 2. Use thrust::tabulate to fill the vector.
-    // It calls an instance of our RandomGenerator for each index from 0 to
-    // num_elements-1.
-    thrust::tabulate(A_matrix.begin(), A_matrix.end(), RandomGenerator(seed));
-    thrust::tabulate(B_matrix.begin(), B_matrix.end(), RandomGenerator(seed));
-    thrust::tabulate(C_matrix.begin(), C_matrix.end(), RandomGenerator(seed));
-
-    int64_t* raw_ptr_A = thrust::raw_pointer_cast(A_matrix.data());
-    int64_t* raw_ptr_B = thrust::raw_pointer_cast(B_matrix.data());
-    int64_t* raw_ptr_C = thrust::raw_pointer_cast(C_matrix.data());
-
     torch::Device device = torch::kCPU;
     auto options = torch::TensorOptions().dtype(torch::kInt64).device(device);
-    int64_t N_int64 = static_cast<int64_t>(N);
 
-    torch::Tensor A = torch::from_blob(raw_ptr_A, {N_int64, N_int64}, options);
-    torch::Tensor B = torch::from_blob(raw_ptr_B, {N_int64, N_int64}, options);
-    torch::Tensor C = torch::from_blob(raw_ptr_C, {N_int64, N_int64}, options);
+    torch::Tensor A = torch::from_blob(raw_ptr_A, {N, N}, options);
+    torch::Tensor B = torch::from_blob(raw_ptr_B, {N, N}, options);
+    torch::Tensor C = torch::from_blob(raw_ptr_C, {N, N}, options);
 
     int64_t final_result = 0;
     auto compute_func = [&]() -> void {

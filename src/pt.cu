@@ -1,5 +1,6 @@
 #include "pt.hpp"
 
+#include <array>
 #include <cooperative_groups.h>
 #include <cstdint>
 #include <cub/cub.cuh>
@@ -26,6 +27,9 @@
 namespace cg = cooperative_groups;
 
 namespace pt::gpu {
+
+template <std::size_t NumMatrices>
+using DataGenerator = GpuDataGenerator<NumMatrices>;
 
 // \sum A_ij * B_ik * C_il
 // where A, B, C are (N, N) matrices
@@ -105,23 +109,11 @@ __global__ void naive_star_kernel(const int64_t* A, const int64_t* B,
 
 int64_t pt_naive(const int32_t N, const int64_t seed) {
     assert(N % NUM_THREADS_IN_BLOCK == 0);
-    const int64_t num_elements = N * N;
 
-    // 1. Create a Thrust device_vector.
-    thrust::device_vector<int64_t> A_matrix(num_elements);
-    thrust::device_vector<int64_t> B_matrix(num_elements);
-    thrust::device_vector<int64_t> C_matrix(num_elements);
-
-    // 2. Use thrust::tabulate to fill the vector.
-    // It calls an instance of our RandomGenerator for each index from 0 to
-    // num_elements-1.
-    thrust::tabulate(A_matrix.begin(), A_matrix.end(), RandomGenerator(seed));
-    thrust::tabulate(B_matrix.begin(), B_matrix.end(), RandomGenerator(seed));
-    thrust::tabulate(C_matrix.begin(), C_matrix.end(), RandomGenerator(seed));
-
-    int64_t* raw_ptr_A = thrust::raw_pointer_cast(A_matrix.data());
-    int64_t* raw_ptr_B = thrust::raw_pointer_cast(B_matrix.data());
-    int64_t* raw_ptr_C = thrust::raw_pointer_cast(C_matrix.data());
+    DataGenerator<3> data_gen(N, seed);
+    int64_t* raw_ptr_A = data_gen.get_raw_ptr<0>();
+    int64_t* raw_ptr_B = data_gen.get_raw_ptr<1>();
+    int64_t* raw_ptr_C = data_gen.get_raw_ptr<2>();
 
     // Warm up
     thrust::device_vector<int64_t> d_output(1, 0);
@@ -140,25 +132,13 @@ int64_t pt_naive(const int32_t N, const int64_t seed) {
 }
 
 int64_t pt_torch(const int32_t N, const int64_t seed) {
+
+    DataGenerator<3> data_gen(N, seed);
+    int64_t* raw_ptr_A = data_gen.get_raw_ptr<0>();
+    int64_t* raw_ptr_B = data_gen.get_raw_ptr<1>();
+    int64_t* raw_ptr_C = data_gen.get_raw_ptr<2>();
+
     torch::NoGradGuard no_grad;
-    const int64_t num_elements = N * N;
-
-    // 1. Create a Thrust device_vector.
-    thrust::device_vector<int64_t> A_matrix(num_elements);
-    thrust::device_vector<int64_t> B_matrix(num_elements);
-    thrust::device_vector<int64_t> C_matrix(num_elements);
-
-    // 2. Use thrust::tabulate to fill the vector.
-    // It calls an instance of our RandomGenerator for each index from 0 to
-    // num_elements-1.
-    thrust::tabulate(A_matrix.begin(), A_matrix.end(), RandomGenerator(seed));
-    thrust::tabulate(B_matrix.begin(), B_matrix.end(), RandomGenerator(seed));
-    thrust::tabulate(C_matrix.begin(), C_matrix.end(), RandomGenerator(seed));
-
-    int64_t* raw_ptr_A = thrust::raw_pointer_cast(A_matrix.data());
-    int64_t* raw_ptr_B = thrust::raw_pointer_cast(B_matrix.data());
-    int64_t* raw_ptr_C = thrust::raw_pointer_cast(C_matrix.data());
-
     torch::Device device = torch::kCUDA;
     auto options = torch::TensorOptions().dtype(torch::kInt64).device(device);
 
