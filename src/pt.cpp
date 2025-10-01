@@ -16,8 +16,8 @@ namespace pt::cpu {
 template <std::size_t NumMatrices>
 using DataGenerator = CpuDataGenerator<NumMatrices>;
 
-int64_t sum_over_2nd_dim(const thrust::host_vector<int64_t>& matrix,
-                         const int32_t N, const int32_t i) {
+int64_t sum_over_2nd_dim(const int64_t* matrix, const int32_t N,
+                         const int32_t i) {
     int64_t total_sum = 0;
     for (int32_t j = 0; j < N; j++) {
         total_sum += matrix[i * N + j];
@@ -27,9 +27,9 @@ int64_t sum_over_2nd_dim(const thrust::host_vector<int64_t>& matrix,
 
 int64_t pt_naive(const int32_t N, const int64_t seed) {
     DataGenerator<3> data_gen(N, seed);
-    auto& A_matrix = data_gen.get_matrix<0>();
-    auto& B_matrix = data_gen.get_matrix<1>();
-    auto& C_matrix = data_gen.get_matrix<2>();
+    int64_t* A_matrix = data_gen.get_raw_ptr<0>();
+    int64_t* B_matrix = data_gen.get_raw_ptr<1>();
+    int64_t* C_matrix = data_gen.get_raw_ptr<2>();
 
     std::atomic<int64_t> total_sum = 0;
     auto compute_func = [&]() -> void {
