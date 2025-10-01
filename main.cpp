@@ -1,33 +1,72 @@
 #include <absl/log/check.h>
 #include <fmt/format.h>
 #include <proxy/proxy.h>
+#include <string>
 
 #include "pt.hpp"
+#include "timer.hpp"
 int main(int argc, char** argv) {
 
     int32_t N = 32768; // 2<<15 && 2 << 30
 
     if (argc > 1) {
         // Test if the first argument is a number
-        DCHECK(std::all_of(argv[1], argv[1] + std::strlen(argv[1]), ::isdigit))
-            << "The first argument must be a number representing the matrix "
-               "size N.";
+        if (!std::all_of(argv[1], argv[1] + std::strlen(argv[1]), ::isdigit)) {
+            fmt::println(
+                "1st argument must be a number for the matrix size N.");
+            return 1;
+        }
         N = std::stoull(argv[1]);
     }
 
-    fmt::print("Matrix size: {} x {}\n", N, N);
+    fmt::println("Matrix size: {} x {}", N, N);
 
-    int64_t gpu_naive_result = pt::gpu::pt_naive(N);
-    fmt::print("GPU Naive Result: {}\n", gpu_naive_result);
+    bool use_gpu = true;
+    bool use_cpu = false;
 
-    int64_t gpu_torch_result = pt::gpu::pt_torch(N);
-    fmt::print("GPU Torch Result: {}\n", gpu_torch_result);
+    if (argc > 2) {
+        std::string mode = argv[2];
+        if (mode == "cpu") {
+            use_gpu = false;
+            use_cpu = true;
+        } else if (mode == "gpu") {
+            use_gpu = true;
+            use_cpu = false;
+        } else if (mode == "both") {
+            use_gpu = true;
+            use_cpu = true;
+        } else {
+            fmt::println("2nd argument is mode in ['cpu', 'gpu', 'both']");
+            return 1;
+        }
+    }
 
-    int64_t cpu_naive_result = pt::cpu::pt_naive(N);
-    fmt::print("CPU Naive Result: {}\n", cpu_naive_result);
+    if (argc > 3) {
+        // Test if the third argument is a number
+        if (!std::all_of(argv[3], argv[3] + std::strlen(argv[3]), ::isdigit)) {
+            fmt::println("3rd argument must be a number for the repeat count.");
+            return 1;
+        }
+        Timer::SetRepeatNum(std::stoull(argv[3]));
+    }
 
-    int64_t cpu_torch_result = pt::cpu::pt_torch(N);
-    fmt::print("CPU Torch Result: {}\n", cpu_torch_result);
+    fmt::println("Repeat count: {}", Timer::GetRepeatNum());
+
+    if (use_gpu) {
+        int64_t gpu_naive_result = pt::gpu::pt_naive(N);
+        fmt::println("GPU Naive result: {}", gpu_naive_result);
+
+        int64_t gpu_torch_result = pt::gpu::pt_torch(N);
+        fmt::println("GPU Torch result: {}", gpu_torch_result);
+    }
+
+    if (use_cpu) {
+        int64_t cpu_naive_result = pt::cpu::pt_naive(N);
+        fmt::println("CPU Naive result: {}", cpu_naive_result);
+
+        int64_t cpu_torch_result = pt::cpu::pt_torch(N);
+        fmt::println("CPU Torch result: {}", cpu_torch_result);
+    }
 
     return 0;
 }

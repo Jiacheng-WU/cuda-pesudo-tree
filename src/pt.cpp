@@ -8,8 +8,8 @@
 #include <thrust/tabulate.h>
 #include <torch/torch.h>
 
-#include "cpu_timer.hpp"
 #include "random_gen.hpp"
+#include "timer.hpp"
 
 namespace pt::cpu {
 
@@ -45,7 +45,7 @@ int64_t pt_naive(const int32_t N, const int64_t seed) {
     };
 
     auto reset_func = [&]() -> void { total_sum.store(0); };
-    CpuTimer::RepeatTiming("CPU Naive", 10, compute_func, reset_func);
+    Timer::RepeatTiming<Timer::CPU>("CPU Naive", compute_func, reset_func);
     return total_sum.load();
 }
 
@@ -74,8 +74,8 @@ int64_t pt_torch(const int32_t N, const int64_t seed) {
         final_result = result.sum().item<int64_t>();
     };
 
-    CpuTimer::RepeatTiming("CPU Torch", 10, compute_func,
-                           CpuTimer::EmptyResetFunc);
+    Timer::RepeatTiming<Timer::CPU>("CPU Torch", compute_func,
+                                    Timer::EmptyResetFunc);
     return final_result;
 }
 

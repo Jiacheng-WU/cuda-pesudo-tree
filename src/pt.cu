@@ -18,8 +18,8 @@
 #include <thrust/transform.h>
 #include <torch/torch.h>
 
-#include "gpu_timer.hpp"
 #include "random_gen.hpp"
+#include "timer.hpp"
 
 #include <concepts>
 #include <type_traits>
@@ -122,7 +122,7 @@ int64_t pt_naive(const int32_t N, const int64_t seed) {
             raw_ptr_A, raw_ptr_B, raw_ptr_C, N, raw_ptr_output);
     };
     auto reset_func = [&]() -> void { d_output[0] = 0; };
-    GpuTimer::RepeatTiming("GPU Naive", 10, timed_func, reset_func);
+    Timer::RepeatTiming<Timer::GPU>("GPU Naive", timed_func, reset_func);
 
     thrust::host_vector<int64_t> h_output = d_output;
 
@@ -155,8 +155,8 @@ int64_t pt_torch(const int32_t N, const int64_t seed) {
 
         final_result = result.sum().item<int64_t>();
     };
-    GpuTimer::RepeatTiming("GPU Torch", 10, compute_func,
-                           GpuTimer::EmptyResetFunc);
+    Timer::RepeatTiming<Timer::GPU>("GPU Torch", compute_func,
+                                    Timer::EmptyResetFunc);
 
     return final_result;
 }

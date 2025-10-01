@@ -43,14 +43,14 @@ find_package(pybind11 CONFIG REQUIRED)
 
 # Define variables for clarity
 
-set(THIRD_PARTY_DIR "${CMAKE_SOURCE_DIR}/third_party/")
-set(TORCH_DIR "${THIRD_PARTY_DIR}/libtorch")
+set(THIRD_PARTY_DIR "${CMAKE_SOURCE_DIR}/third_party")
+set(TORCH_INSTALL_DIR "${THIRD_PARTY_DIR}/libtorch")
 
 # Only proceed if the extraction directory doesn't already exist
-if(NOT EXISTS "${TORCH_DIR}")
+if(NOT EXISTS "${TORCH_INSTALL_DIR}")
     set(TORCH_URL "https://download.pytorch.org/libtorch/nightly/cu130/libtorch-shared-with-deps-latest.zip")
     set(TORCH_FILE "${CMAKE_BINARY_DIR}/libtorch.zip")
-    message(STATUS "Downloading and extracting dependency to ${TORCH_DIR}")
+    message(STATUS "Downloading and extracting dependency to ${TORCH_INSTALL_DIR}")
     # 1. Download the ZIP file to a temporary location in the build directory
     file(DOWNLOAD ${TORCH_URL} ${TORCH_FILE} SHOW_PROGRESS)
     # 2. Decompress the ZIP directly into your desired source folder
@@ -60,11 +60,11 @@ if(NOT EXISTS "${TORCH_DIR}")
         COMMAND_ERROR_IS_FATAL ANY
     )
 else()
-    message(STATUS "Dependency already exists at ${TORCH_DIR}")
+    message(STATUS "Dependency already exists at ${TORCH_INSTALL_DIR}")
 endif()
 set(CUDA_TOOLKIT_ROOT_DIR ${CUDAToolkit_LIBRARY_ROOT})
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${TORCH_DIR}/libtorch/share/cmake/Torch)
-
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${TORCH_INSTALL_DIR}/share/cmake/Torch)
+message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 find_package(Torch CONFIG)
 
 # Follow CUTLASS cmake INTERFACE pattern
