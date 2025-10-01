@@ -38,16 +38,15 @@ using DataGenerator = GpuDataGenerator<NumMatrices>;
 constinit const int32_t NUM_THREADS_IN_BLOCK = 1024;
 
 __device__ int64_t sum_over_2nd_dim(const int64_t* Mat, const int32_t N,
-                                    const int32_t num_cols_local,
                                     int32_t row_idx) {
 
     int32_t thread_idx = threadIdx.x;
+    int32_t num_threads_in_block = blockDim.x;
     int64_t Mat_i_sum_over_part_j = 0;
 
-    // TODO: need to consider the Memory coalescing
-    // change to loop stride mode perhaps at least for warp level
-    for (int32_t col_idx = thread_idx * num_cols_local;
-         col_idx < (thread_idx + 1) * num_cols_local; ++col_idx) {
+    // Use loop stride mode for coalesced memory access
+    for (int32_t col_idx = thread_idx; col_idx < N;
+         col_idx += num_threads_in_block) {
         int64_t Mat_ij = Mat[row_idx * N + col_idx];
         Mat_i_sum_over_part_j += Mat_ij;
     }
@@ -68,7 +67,7 @@ __global__ void naive_star_kernel(const int64_t* A, const int64_t* B,
 
     int32_t num_blocks_in_grid = gridDim.x;
     int32_t block_idx = blockIdx.x;
-    int32_t num_threads_in_block = blockDim.x;
+    [[maybe_unused]] int32_t num_threads_in_block = blockDim.x;
     int32_t thread_idx = threadIdx.x;
 
     assert(num_blocks_in_grid == num_threads_in_block);
@@ -76,7 +75,6 @@ __global__ void naive_star_kernel(const int64_t* A, const int64_t* B,
     assert(N % num_threads_in_block == 0);
 
     int32_t num_rows_local = N / num_blocks_in_grid;
-    int32_t num_cols_local = N / num_threads_in_block;
 
     int64_t local_part_output = 0;
 
@@ -88,9 +86,9 @@ __global__ void naive_star_kernel(const int64_t* A, const int64_t* B,
         // Perhaps we could store the intermediate results in shared memory
         // and do the reduction at the end for each row at same time
         // TODO: Perhaps let each warp do the reduction for one row
-        int64_t A_i_sum = sum_over_2nd_dim(A, N, num_cols_local, row_idx);
-        int64_t B_i_sum = sum_over_2nd_dim(B, N, num_cols_local, row_idx);
-        int64_t C_i_sum = sum_over_2nd_dim(C, N, num_cols_local, row_idx);
+        int64_t A_i_sum = sum_over_2nd_dim(A, N, row_idx);
+        int64_t B_i_sum = sum_over_2nd_dim(B, N, row_idx);
+        int64_t C_i_sum = sum_over_2nd_dim(C, N, row_idx);
 
         if (thread_idx == 0) {
             local_part_output += A_i_sum * B_i_sum * C_i_sum;
