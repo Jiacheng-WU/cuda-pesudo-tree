@@ -1,28 +1,17 @@
 #include "pt.hpp"
 
-#include <array>
 #include <cooperative_groups.h>
-#include <cstdint>
+#include <cooperative_groups/memcpy_async.h>
 #include <cub/cub.cuh>
+#include <cuda/pipeline>
 #include <cuda/std/span>
 #include <cuda_runtime.h>
 #include <cuda_runtime_api.h>
 #include <cutlass/cutlass.h>
-#include <driver_types.h>
-#include <sys/types.h>
-#include <thrust/device_vector.h>
-#include <thrust/host_vector.h>
-#include <thrust/random.h>
-#include <thrust/sequence.h>
-#include <thrust/tabulate.h>
-#include <thrust/transform.h>
 #include <torch/torch.h>
 
 #include "random_gen.hpp"
 #include "timer.hpp"
-
-#include <concepts>
-#include <type_traits>
 
 namespace cg = cooperative_groups;
 
@@ -135,15 +124,13 @@ __device__ int64_t sum_over_2nd_dim_warp(const int64_t* Mat, const int32_t N,
     int32_t thread_idx = threadIdx.x;
     int32_t warp_idx = thread_idx / WARP_SIZE;
     int32_t lane_idx = thread_idx % WARP_SIZE;
-    int32_t num_warps_in_block = blockDim.x / WARP_SIZE;
 
     int64_t Mat_i_sum_over_part_j = 0;
 
     cg::thread_block my_block = cg::this_thread_block();
     auto my_warp = cg::tiled_partition<WARP_SIZE>(my_block);
     // Use loop stride mode for coalesced memory access
-    for (int32_t col_idx = lane_idx; col_idx < N;
-         col_idx += num_warps_in_block) {
+    for (int32_t col_idx = lane_idx; col_idx < N; col_idx += WARP_SIZE) {
         int64_t Mat_ij = Mat[row_idx * N + col_idx];
         Mat_i_sum_over_part_j += Mat_ij;
     }
@@ -220,7 +207,7 @@ int64_t pt_pwarp(const int32_t N, const int64_t seed) {
     int64_t* raw_ptr_output = thrust::raw_pointer_cast(d_output.data());
 
     auto timed_func = [&]() -> void {
-        pwarp_star_kernel<<<NUM_THREADS_IN_BLOCK / 32, NUM_THREADS_IN_BLOCK>>>(
+        pwarp_star_kernel<<<NUM_THREADS_IN_BLOCK, NUM_THREADS_IN_BLOCK>>>(
             raw_ptr_A, raw_ptr_B, raw_ptr_C, N, raw_ptr_output);
     };
     auto reset_func = [&]() -> void { d_output[0] = 0; };

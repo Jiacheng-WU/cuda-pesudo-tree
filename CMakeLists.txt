@@ -26,8 +26,16 @@ set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} --device-debug")
 set(CMAKE_CUDA_FLAGS_RELWITHDEBINFO "${CMAKE_CUDA_FLAGS_RELWITHDEBINFO} --generate-line-info")
 
 find_package(CUDAToolkit REQUIRED)
-find_package(CCCL CONFIG REQUIRED)
 find_package(Threads REQUIRED)
+# Should include TBB for CPU std parallel backend
+# Otherwise, default gcc always use sequential backend
+find_package(TBB REQUIRED)
+# Thrust is arcive, do not explicitly find it by find_package(Thrust).
+# Just find CCCL and use CCCL::CCCL or CCCL::Thrust instead.
+# Let CCCL::Thrust use TBB as the backend, then same as std::execution::par
+set(CCCL_THRUST_HOST_SYSTEM "TBB" CACHE STRING "Thrust host system for CCCL")
+find_package(CCCL CONFIG REQUIRED)
+
 find_package(Boost CONFIG)
 find_package(GTest CONFIG REQUIRED)
 find_package(benchmark CONFIG REQUIRED)
@@ -35,6 +43,7 @@ find_package(benchmark CONFIG REQUIRED)
 # find_package(fmt CONFIG REQUIRED)
 find_package(absl REQUIRED COMPONENTS log)
 find_package(nlohmann_json CONFIG REQUIRED)
+find_package(ICU COMPONENTS uc i18n REQUIRED)
 
 
 find_package(Python COMPONENTS Interpreter Development)
@@ -108,6 +117,9 @@ target_link_libraries(core_utils
     fmt::fmt
     absl::log
     Boost::boost
+    TBB::tbb
+    ICU::uc
+    ICU::i18n
 )
 
 # create blob for all cu files
@@ -149,7 +161,8 @@ add_executable(main main.cpp)
 target_link_libraries(main
     PRIVATE mycudalib
     PRIVATE mycpplib
-    PRIVATE core_utils)
+    PRIVATE core_utils
+)
 
 # For Python bindings
 pybind11_add_module(pesudo_tree python/bind/main.cpp)

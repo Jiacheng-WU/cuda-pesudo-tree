@@ -4,8 +4,6 @@
 #include <execution>
 #include <ranges>
 
-#include <thrust/host_vector.h>
-#include <thrust/tabulate.h>
 #include <torch/torch.h>
 
 #include "random_gen.hpp"

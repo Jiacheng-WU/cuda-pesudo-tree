@@ -23,6 +23,7 @@ llvm = ">=21.1.2,<22"
 clang = ">=21.1.2,<22"
 cutlass = ">=4.2.1,<5"
 tbb = ">=2022.2.0,<2023"
+tbb-devel = ">=2022.2.0,<2023"
 pybind11 = ">=3.0.1,<4"
 nlohmann_json = ">=3.12.0,<4"
 cuda = ">=13.0.1,<14"
@@ -47,6 +48,7 @@ python = ">=3.13.7,<3.14"
 rust = ">=1.90.0,<1.91"
 pytest = ">=8.4.2,<9"
 nvtx = ">=0.2.13,<0.3"
+icu = ">=75.1,<76"
 
 [pypi-dependencies]
 # triton = { version = ">=3.4.0, <4", index = "https://pypi.org/simple" }

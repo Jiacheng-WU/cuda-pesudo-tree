@@ -29,6 +29,7 @@ CompileFlags:
     - --no-cuda-version-check
     - "-DLIBCUDACXX_ENABLE_EXPERIMENTAL_MEMORY_RESOURCE"
     - "-Xclang=-fcuda-allow-variadic-functions"
+    - -D__CUDA_ARCH__=1200
   Remove:
     - -G
     - -stdpar

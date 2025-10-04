@@ -1,5 +1,6 @@
 #include <absl/log/check.h>
 #include <charconv>
+#include <fmt/base.h>
 #include <fmt/format.h>
 #include <proxy/proxy.h>
 #include <string>
@@ -7,6 +8,7 @@
 
 #include "pt.hpp"
 #include "timer.hpp"
+
 int main(int argc, char** argv) {
 
     int32_t N = 32768; // 2<<15 && 2 << 30
