@@ -85,6 +85,9 @@ int main(int argc, char** argv) {
 
         int64_t cpu_torch_result = pt::cpu::pt_torch(N);
         fmt::println("CPU Torch result: {}", cpu_torch_result);
+
+        int64_t cpu_eigen_result = pt::cpu::pt_eigen(N);
+        fmt::println("CPU Eigen result: {}", cpu_eigen_result);
     }
 
     return 0;

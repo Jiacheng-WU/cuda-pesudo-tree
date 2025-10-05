@@ -44,7 +44,21 @@ find_package(benchmark CONFIG REQUIRED)
 find_package(absl REQUIRED COMPONENTS log)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(ICU COMPONENTS uc i18n REQUIRED)
+find_package(OpenMP REQUIRED)
 
+include(cmake/GetVendor.cmake)
+detect_cpu_vendor(CPU_VENDOR)
+message(STATUS "Detected CPU vendor: ${CPU_VENDOR}")
+# Use AMD's BLIS if AMD CPU is detected
+if(CPU_VENDOR STREQUAL "AMD")
+    set(BLA_VENDOR AOCL_mt)
+elseif(CPU_VENDOR STREQUAL "Intel")
+    set(BLA_VENDOR Intel10_64lp)
+else()
+    set(BLA_VENDOR OpenBLAS)
+endif()
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
 
 find_package(Python COMPONENTS Interpreter Development)
 set(PYBIND11_FINDPYTHON NEW)
@@ -92,6 +106,7 @@ set(CPM_SOURCE_CACHE ${THIRD_PARTY_DIR} CACHE PATH "CPM source cache")
 include(cmake/CPM.cmake)
 
 CPMAddPackage("gh:fmtlib/fmt#12.0.0")
+CPMAddPackage("gl:libeigen/eigen#5.0.0")
 CPMAddPackage(
     URI "gh:microsoft/proxy#4.0.0"
     OPTIONS "BUILD_TESTING OFF"
@@ -114,10 +129,10 @@ add_library(core_utils INTERFACE)
 
 target_link_libraries(core_utils
   INTERFACE
+    Threads::Threads
     fmt::fmt
     absl::log
     Boost::boost
-    TBB::tbb
     ICU::uc
     ICU::i18n
 )
@@ -151,10 +166,18 @@ add_library(mycpplib STATIC ${CPP_SOURCE})
 target_link_libraries(mycpplib
     PUBLIC nlohmann_json::nlohmann_json
     PUBLIC msft_proxy4::proxy
-    PUBLIC Threads::Threads
     PUBLIC STDEXEC::stdexec
+    PUBLIC TBB::tbb
+    PUBLIC OpenMP::OpenMP_CXX
+    PUBLIC BLAS::BLAS
+    PUBLIC Eigen3::Eigen
     PUBLIC ${TORCH_LIBRARIES}
     PRIVATE core_utils
+)
+# Enable BLAS and LAPACK support in Eigen
+target_compile_definitions(mycpplib
+    PRIVATE EIGEN_USE_BLAS
+    PRIVATE EIGEN_USE_LAPACKE
 )
 
 add_executable(main main.cpp)

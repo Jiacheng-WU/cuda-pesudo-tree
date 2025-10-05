@@ -11,6 +11,7 @@ int64_t pt_torch(const int32_t N, const int64_t seed = 42ULL);
 namespace cpu {
 int64_t pt_naive(const int32_t N, const int64_t seed = 42ULL);
 int64_t pt_torch(const int32_t N, const int64_t seed = 42ULL);
+int64_t pt_eigen(const int32_t N, const int64_t seed = 42ULL);
 } // namespace cpu
 
 } // namespace pt
