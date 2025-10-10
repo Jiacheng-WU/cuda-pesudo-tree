@@ -1,4 +1,4 @@
-#include "pt.hpp"
+#include "tb.hpp"
 
 #include <cooperative_groups.h>
 #include <cooperative_groups/memcpy_async.h>
@@ -16,7 +16,7 @@
 
 namespace cg = cooperative_groups;
 
-namespace pt::gpu {
+namespace tb::gpu {
 
 template <std::size_t NumMatrices>
 using DataGenerator = GpuDataGenerator<NumMatrices>;
@@ -96,7 +96,7 @@ __global__ void naive_star_kernel(const int64_t* A, const int64_t* B,
     }
 }
 
-int64_t pt_naive(const int32_t N, const int64_t seed) {
+int64_t tb_naive(const int32_t N, const int64_t seed) {
     assert(N % NUM_THREADS_IN_BLOCK == 0);
 
     DataGenerator<3> data_gen(N, seed);
@@ -195,7 +195,7 @@ __global__ void pwarp_star_kernel(const int64_t* A, const int64_t* B,
     }
 }
 
-int64_t pt_pwarp(const int32_t N, const int64_t seed) {
+int64_t tb_pwarp(const int32_t N, const int64_t seed) {
     assert(N % NUM_THREADS_IN_BLOCK == 0);
     assert(WARP_SIZE == warpSize);
 
@@ -217,7 +217,7 @@ int64_t pt_pwarp(const int32_t N, const int64_t seed) {
     return h_output[0];
 }
 
-int64_t pt_torch(const int32_t N, const int64_t seed) {
+int64_t tb_torch(const int32_t N, const int64_t seed) {
 
     DataGenerator<3> data_gen(N, seed);
     int64_t* raw_ptr_A = data_gen.get_raw_ptr<0>();
@@ -249,4 +249,4 @@ int64_t pt_torch(const int32_t N, const int64_t seed) {
     return final_result;
 }
 
-} // namespace pt::gpu
+} // namespace tb::gpu

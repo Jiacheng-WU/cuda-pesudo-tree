@@ -1,7 +1,7 @@
 {
     "cmake.configureArgs": [
         "-DCMAKE_C_COMPILER=x86_64-conda-linux-gnu-gcc",
-        "-DCMAKE_CXX_COMPILER=x86_64-conda-linux-gnu-g++"
+        "-DCMAKE_CXX_COMPILER=x86_64-conda-linux-gnu-g++",
     ],
     "clangd.arguments": [
         "--compile-commands-dir=${workspaceFolder}/_cmake_build_vscode",
@@ -30,5 +30,7 @@
     "python-envs.defaultEnvManager": "ms-python.python:system",
     "python-envs.pythonProjects": [],
     "clangd.path": "/opt/llvm/llvm-snapshot/bin/clangd",
-    "rust-analyzer.server.path": "${workspaceFolder}/.pixi/envs/default/bin/rust-analyzer"
+    "rust-analyzer.server.path": "${workspaceFolder}/.pixi/envs/default/bin/rust-analyzer",
+    "direnv.watchForChanges": true,
+    "direnv.restart.automatic": true
 }

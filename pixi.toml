@@ -11,9 +11,9 @@ CMAKE_PREFIX_PATH = "${CMAKE_PREFIX_PATH}:${PIXI_PROJECT_ROOT}/.pixi/envs/defaul
 [tasks]
 
 [dependencies]
-gcc = ">=15.1.0,<15.2"
-gxx = ">=15.1.0,<15.2"
-libgcc-ng = ">=15.1.0,<16"
+gcc = ">=15.2.0,<16"
+gxx = ">=15.2.0,<16"
+libgcc-ng = ">=15.2.0,<16"
 libboost = ">=1.89.0,<2"
 libboost-headers = ">=1.89.0,<2"
 libboost-devel = ">=1.89.0,<2"
@@ -30,10 +30,10 @@ tbb = ">=2022.2.0,<2023"
 tbb-devel = ">=2022.2.0,<2023"
 pybind11 = ">=3.0.1,<4"
 nlohmann_json = ">=3.12.0,<4"
-cuda = ">=13.0.1,<14"
+cuda = ">=13.0.2,<14"
 cuda-python = ">=13.0.1,<14"
 libabseil = ">=20250814.1,<20250815"
-cmake = ">=4.1.1,<5"
+cmake = ">=4.1.2,<5"
 gtest = ">=1.17.0,<2"
 benchmark = ">=1.9.4,<2"
 fmt = ">=11.2.0,<12"
@@ -41,7 +41,7 @@ cuda-core = ">=0.3.2,<0.4"
 cuda-version = ">=13.0,<14"
 cupy = ">=13.6.0,<14"
 numba-cuda = ">=0.20.0,<0.21"
-cudnn = ">=9.13.0.50,<10"
+cudnn = ">=9.13.1.26,<10"
 mkl = ">=2020.4,<2021"
 mkl-devel = ">=2020.4,<2021"
 oneccl-devel = ">=2021.16.0,<2022"
@@ -65,7 +65,7 @@ openblas-ilp64 = ">=0.3.30,<0.4"
 
 [pypi-dependencies]
 # triton = { version = ">=3.4.0, <4", index = "https://pypi.org/simple" }
-onnx = { version = ">=1.19.0, <2", index = "https://pypi.org/simple" }
+onnx = { version = "*", index = "https://pypi.org/simple" }
 pytorch-triton = { version = "*", index = "https://download.pytorch.org/whl/nightly/cu130" }
 torch = { version = ">=2.9.0", index = "https://download.pytorch.org/whl/nightly/cu130" }
 torchvision = { version = "*", index = "https://download.pytorch.org/whl/nightly/cu130" }
