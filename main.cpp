@@ -6,7 +6,7 @@
 #include <string>
 #include <string_view>
 
-#include "pt.hpp"
+#include "st.hpp"
 #include "tb.hpp"
 #include "timer.hpp"
 
@@ -70,25 +70,25 @@ int main(int argc, char** argv) {
     fmt::println("Repeat count: {}", Timer::GetRepeatNum());
 
     if (use_gpu) {
-        int64_t gpu_naive_result = pt::gpu::pt_naive(N);
-        fmt::println("GPU Naive result: {}", gpu_naive_result);
+        st::data_t gpu_naive_result = st::gpu::st_naive(N);
+        fmt::println("ST GPU Naive result: {}", gpu_naive_result);
 
-        int64_t gpu_pwarp_result = pt::gpu::pt_pwarp(N);
-        fmt::println("GPU PWarp result: {}", gpu_pwarp_result);
+        st::data_t gpu_pwarp_result = st::gpu::st_pwarp(N);
+        fmt::println("ST GPU PWarp result: {}", gpu_pwarp_result);
 
-        int64_t gpu_torch_result = pt::gpu::pt_torch(N);
-        fmt::println("GPU Torch result: {}", gpu_torch_result);
+        st::data_t gpu_torch_result = st::gpu::st_torch(N);
+        fmt::println("ST GPU Torch result: {}", gpu_torch_result);
     }
 
     if (use_cpu) {
-        int64_t cpu_naive_result = pt::cpu::pt_naive(N);
-        fmt::println("CPU Naive result: {}", cpu_naive_result);
+        st::data_t cpu_naive_result = st::cpu::st_naive(N);
+        fmt::println("ST CPU Naive result: {}", cpu_naive_result);
 
-        int64_t cpu_torch_result = pt::cpu::pt_torch(N);
-        fmt::println("CPU Torch result: {}", cpu_torch_result);
+        st::data_t cpu_torch_result = st::cpu::st_torch(N);
+        fmt::println("ST CPU Torch result: {}", cpu_torch_result);
 
-        int64_t cpu_eigen_result = pt::cpu::pt_eigen(N);
-        fmt::println("CPU Eigen result: {}", cpu_eigen_result);
+        st::data_t cpu_eigen_result = st::cpu::st_eigen(N);
+        fmt::println("ST CPU Eigen result: {}", cpu_eigen_result);
     }
 
     return 0;
